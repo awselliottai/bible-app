@@ -202,6 +202,52 @@ body {
   color: var(--danger-text);
 }
 
+.study-loading {
+  align-items: center;
+  display: inline-flex;
+  gap: 0.35rem;
+  min-height: 1.5rem;
+}
+
+.study-loading-bar {
+  animation: study-loading-wave 1s ease-in-out infinite;
+  background: color-mix(in srgb, var(--accent) 72%, var(--foreground) 28%);
+  border-radius: 999px;
+  display: block;
+  height: 1rem;
+  opacity: 0.5;
+  width: 0.28rem;
+}
+
+.study-loading-bar:nth-child(2) {
+  animation-delay: 0.12s;
+}
+
+.study-loading-bar:nth-child(3) {
+  animation-delay: 0.24s;
+}
+
+@keyframes study-loading-wave {
+  0%,
+  100% {
+    opacity: 0.45;
+    transform: scaleY(0.55);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .study-loading-bar {
+    animation: none;
+    opacity: 0.75;
+    transform: scaleY(0.75);
+  }
+}
+
 .citation-link {
   color: var(--link);
   text-decoration-color: color-mix(in srgb, var(--link) 60%, transparent);

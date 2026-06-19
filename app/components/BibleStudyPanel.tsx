@@ -92,6 +92,20 @@ function renderResponseText(content: string) {
   });
 }
 
+function StudyLoadingIndicator() {
+  return (
+    <div
+      aria-label="Response loading"
+      className="study-loading"
+      role="status"
+    >
+      <span className="study-loading-bar" />
+      <span className="study-loading-bar" />
+      <span className="study-loading-bar" />
+    </div>
+  );
+}
+
 export function BibleStudyPanel({
   versionId,
   bookId,
@@ -317,6 +331,10 @@ export function BibleStudyPanel({
                   ? message.role === "assistant"
                     ? renderResponseText(message.content)
                     : message.content
+                  : message.role === "assistant" &&
+                      isStreaming &&
+                      index === messages.length - 1
+                    ? <StudyLoadingIndicator />
                   : "..."}
               </div>
             </div>

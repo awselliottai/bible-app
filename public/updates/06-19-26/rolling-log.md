@@ -82,3 +82,10 @@
   - **Files:** `app/components/BibleReaderView.tsx`, `public/updates/06-19-26/rolling-log.md`
   - **Verification:** `pnpm run typecheck` and `pnpm run lint` passed.
   - **Follow-ups:** None.
+
+- `01:45` — **Study response loading animation**
+  - **Summary:** Replaced the study panel's static assistant-response ellipses with a minimal animated loading indicator while a chat response is streaming.
+  - **Why:** The chat loading state should feel intentional and modern without distracting from reading.
+  - **Files:** `app/components/BibleStudyPanel.tsx`, `app/globals.css`, `public/updates/06-19-26/rolling-log.md`
+  - **Verification:** `pnpm run typecheck` and `pnpm run lint` passed.
+  - **Follow-ups:** None.

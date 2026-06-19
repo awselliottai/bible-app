@@ -187,7 +187,7 @@ export function BibleStudyPanel({
   }
 
   return (
-    <section className="rounded-lg border border-[#dfd8c9] bg-[#eef3ef] p-5">
+    <section className="w-full rounded-lg border border-[#dfd8c9] bg-[#eef3ef] p-5 transition-shadow duration-300 lg:sticky lg:top-6 lg:max-h-[calc(100vh-3rem)] lg:overflow-y-auto lg:overscroll-contain">
       <div className="flex items-start justify-between gap-3">
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#6f5336]">

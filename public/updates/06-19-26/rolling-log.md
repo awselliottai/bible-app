@@ -54,3 +54,10 @@
   - **Verification:** `pnpm run typecheck`, `pnpm run lint`, and `pnpm run build` passed. Build required elevated permissions because Turbopack binds a local worker port in this environment.
   - **Follow-ups:** Consider switching `/api/ai/study` to a UI message stream if source links need to render as structured metadata instead of inline model citations.
   - **Notes:** The current code default for `OPENAI_MODEL` is `gpt-5-mini-2025-08-07`; this preserves the active file state and supersedes the earlier `01:16` note that mentioned `gpt-5.5`.
+
+- `01:30` — **Sticky study panel sizing**
+  - **Summary:** Made the reader study panel sticky on desktop so it follows the page after the chapter listing, while keeping it full-width inside the right sidebar column.
+  - **Why:** The study panel should remain available while reading long chapters without overlapping or exceeding the sidebar width of the chapter listing above it.
+  - **Files:** `app/components/BibleStudyPanel.tsx`, `public/updates/06-19-26/rolling-log.md`
+  - **Verification:** `pnpm run typecheck` and `pnpm run lint` passed.
+  - **Follow-ups:** None.

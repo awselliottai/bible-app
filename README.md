@@ -26,6 +26,9 @@ Public API routes resolve the requested version to the right provider. API.Bible
 IDs are normalized behind the provider layer so reader-friendly abbreviations can
 be used when they are returned by `GET /v1/bibles`. The public reader pages use
 the same provider layer and render normalized responses into the browsing UI.
+The chapter reader includes a study panel beside the Bible text. Highlighting
+text inside the displayed passage automatically primes that exact selection as
+the focus for the next AI study question.
 
 ## API Routes
 
@@ -60,7 +63,7 @@ Required environment:
 ```bash
 OPENAI_API_KEY=...
 # Optional
-OPENAI_MODEL=gpt-5.5
+OPENAI_MODEL=gpt-5-mini-2025-08-07
 ```
 
 Example request:
@@ -79,6 +82,7 @@ curl -N http://localhost:3000/api/ai/study \
 
 Optional request fields:
 
+- `selectedText`: focused Bible text selected by the reader UI.
 - `webSearch`: defaults to `true`; set `false` only for passage-only answers.
 - `searchContextSize`: `low`, `medium`, or `high`; defaults to `medium`.
 

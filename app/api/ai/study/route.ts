@@ -18,6 +18,7 @@ export async function POST(request: Request) {
       bookId?: string;
       chapter?: number;
       question?: string;
+      selectedText?: string;
       webSearch?: boolean;
       searchContextSize?: BibleStudySearchContextSize;
     };
@@ -53,6 +54,7 @@ export async function POST(request: Request) {
       versionId: body.versionId,
       bookId: body.bookId,
       chapter: body.chapter,
+      hasSelectedText: Boolean(body.selectedText),
       webSearch: body.webSearch ?? true,
       searchContextSize: body.searchContextSize ?? "medium",
     });
@@ -61,6 +63,7 @@ export async function POST(request: Request) {
       bookId: body.bookId,
       chapter: body.chapter,
       question: body.question,
+      selectedText: body.selectedText,
       webSearch: body.webSearch,
       searchContextSize: body.searchContextSize,
     });

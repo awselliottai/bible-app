@@ -46,3 +46,11 @@
   - **Files:** `app/lib/ai/bible-study.ts`, `app/api/ai/study/route.ts`, `README.md`, `public/updates/06-19-26/rolling-log.md`
   - **Verification:** `pnpm run typecheck`, `pnpm run lint`, and `pnpm run build` passed. Build required elevated permissions because Turbopack binds a local worker port in this environment.
   - **Follow-ups:** Add a frontend study/chat surface that streams from `/api/ai/study` and displays source links from the AI SDK stream protocol when user-facing AI study UI is implemented.
+
+- `01:23` — **Selected-passage study panel**
+  - **Summary:** Replaced the reader sidebar's `Continue` panel with a client-side study panel that captures highlighted Bible text, displays the primed selection, accepts a study question, streams the `/api/ai/study` response, and sends the selected passage as `selectedText`. The study backend now includes selected text as the focused prompt context when provided.
+  - **Why:** Users should be able to ask targeted LLM questions about specific highlighted content in the displayed Bible passage rather than only the whole chapter.
+  - **Files:** `app/components/BibleStudyPanel.tsx`, `app/components/BibleReaderView.tsx`, `app/api/ai/study/route.ts`, `app/lib/ai/bible-study.ts`, `README.md`, `public/updates/06-19-26/rolling-log.md`
+  - **Verification:** `pnpm run typecheck`, `pnpm run lint`, and `pnpm run build` passed. Build required elevated permissions because Turbopack binds a local worker port in this environment.
+  - **Follow-ups:** Consider switching `/api/ai/study` to a UI message stream if source links need to render as structured metadata instead of inline model citations.
+  - **Notes:** The current code default for `OPENAI_MODEL` is `gpt-5-mini-2025-08-07`; this preserves the active file state and supersedes the earlier `01:16` note that mentioned `gpt-5.5`.

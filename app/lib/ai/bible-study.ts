@@ -9,6 +9,7 @@ export type BibleStudyPrompt = {
   bookId: string;
   chapter: number;
   question: string;
+  selectedText?: string;
   webSearch?: boolean;
   searchContextSize?: BibleStudySearchContextSize;
 };
@@ -18,6 +19,7 @@ export async function streamBibleStudyResponse({
   bookId,
   chapter,
   question,
+  selectedText,
   webSearch = true,
   searchContextSize = "medium",
 }: BibleStudyPrompt) {
@@ -25,6 +27,7 @@ export async function streamBibleStudyResponse({
     versionId,
     bookId,
     chapter,
+    hasSelectedText: Boolean(selectedText),
     webSearch,
     searchContextSize,
   });
@@ -34,7 +37,7 @@ export async function streamBibleStudyResponse({
     bibleChapter.verses.length > 0
       ? bibleChapter.verses.map((verse) => `${verse.number}. ${verse.text}`).join("\n")
       : JSON.stringify(bibleChapter.contentBlocks ?? bibleChapter.contentHtml ?? "");
-  const model = process.env.OPENAI_MODEL ?? "gpt-5.5";
+  const model = process.env.OPENAI_MODEL ?? "gpt-5-mini-2025-08-07";
 
   console.log("[ai:bible-study] streaming response", {
     model,
@@ -67,6 +70,9 @@ export async function streamBibleStudyResponse({
     prompt: [
       `Passage: ${bibleChapter.reference} (${versionId})`,
       passage,
+      selectedText
+        ? `Focused selected text from this passage:\n${selectedText}`
+        : "No specific text was selected. Use the full supplied chapter as the focus.",
       webSearch
         ? "Web search is enabled. Ground the answer in the supplied passage and use searched sources to verify claims beyond the passage."
         : "Web search is disabled for this request. Do not claim external verification.",

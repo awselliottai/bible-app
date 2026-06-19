@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ApiBibleFums } from "@/app/components/ApiBibleFums";
+import { BibleStudyPanel } from "@/app/components/BibleStudyPanel";
 import type {
   BibleBook,
   BibleChapter,
@@ -173,6 +174,7 @@ function ChapterBody({ chapter }: { chapter: BibleChapter }) {
   if (chapter.contentHtml) {
     return (
       <div
+        data-bible-passage
         className="bible-content-html space-y-5 p-5 text-lg leading-8 text-[#2e3029]"
         dangerouslySetInnerHTML={{ __html: chapter.contentHtml }}
       />
@@ -180,7 +182,10 @@ function ChapterBody({ chapter }: { chapter: BibleChapter }) {
   }
 
   return (
-    <div className="space-y-5 p-5 text-lg leading-8 text-[#2e3029]">
+    <div
+      className="space-y-5 p-5 text-lg leading-8 text-[#2e3029]"
+      data-bible-passage
+    >
       {chapter.verses.map((verse) => (
         <p key={`${chapter.reference}:${verse.number}`}>
           <sup className="mr-1 text-sm font-semibold text-[#8a6a45]">
@@ -346,15 +351,12 @@ export function BibleReaderView({
             </div>
           </section>
 
-          <section className="rounded-lg border border-[#dfd8c9] bg-[#eef3ef] p-5">
-            <h2 className="text-lg font-semibold">Continue</h2>
-            <Link
-              className="mt-4 block rounded-md bg-[#33433a] px-4 py-3 text-center text-sm font-semibold text-white transition hover:bg-[#28362f]"
-              href={hrefForChapter(selectedVersionId, chapter.bookId, chapter.chapter)}
-            >
-              Open {chapter.reference}
-            </Link>
-          </section>
+          <BibleStudyPanel
+            bookId={chapter.bookId}
+            chapter={chapter.chapter}
+            reference={chapter.reference}
+            versionId={selectedVersionId}
+          />
         </aside>
       </section>
 

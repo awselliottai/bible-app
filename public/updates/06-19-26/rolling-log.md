@@ -68,3 +68,17 @@
   - **Files:** `app/components/BibleStudyPanel.tsx`, `public/updates/06-19-26/rolling-log.md`
   - **Verification:** `pnpm run typecheck` and `pnpm run lint` passed.
   - **Follow-ups:** Switch the study route to a UI message stream if the app needs first-class source annotation metadata from AI SDK streams.
+
+- `01:42` — **Dark reading theme and reader controls**
+  - **Summary:** Reworked the reader UI around semantic theme variables with a modern dark default, added a persistent top-right light/dark display toggle, kept a light theme alternative, added a conditional study-panel `Clear chat` button, and added lower previous/next chapter navigation beneath the scripture body.
+  - **Why:** The app should be easier to read by default in low-light contexts while still supporting a non-dark display preference, and reader/chat workflows should have obvious local controls near where users are reading and asking questions.
+  - **Files:** `app/globals.css`, `app/layout.tsx`, `app/components/ThemeToggle.tsx`, `app/components/BibleReaderView.tsx`, `app/components/BibleStudyPanel.tsx`, `README.md`, `public/updates/06-19-26/rolling-log.md`
+  - **Verification:** `pnpm run typecheck` and `pnpm run lint` passed. A sandboxed `pnpm run build` hit the known Turbopack local-port restriction, and the escalated build retry was interrupted before completion.
+  - **Follow-ups:** Run `pnpm run build` with the approved Turbopack port escalation before shipping this visual update.
+
+- `01:44` — **Separate lower chapter navigation**
+  - **Summary:** Moved the lower previous/next chapter navigation out of the reader article so it renders beneath the reader panel as a separate block.
+  - **Why:** Chapter navigation should sit below the reader panel, not inside the panel at its bottom.
+  - **Files:** `app/components/BibleReaderView.tsx`, `public/updates/06-19-26/rolling-log.md`
+  - **Verification:** `pnpm run typecheck` and `pnpm run lint` passed.
+  - **Follow-ups:** None.

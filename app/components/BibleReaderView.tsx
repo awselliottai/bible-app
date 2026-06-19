@@ -198,6 +198,56 @@ function ChapterBody({ chapter }: { chapter: BibleChapter }) {
   );
 }
 
+function ChapterNavigation({
+  chapter,
+  selectedVersionId,
+}: {
+  chapter: BibleChapter;
+  selectedVersionId: string;
+}) {
+  if (!chapter.previous && !chapter.next) {
+    return null;
+  }
+
+  console.log("[component:BibleReaderView] rendering lower chapter navigation", {
+    reference: chapter.reference,
+  });
+
+  return (
+    <nav
+      aria-label="Chapter navigation"
+      className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"
+    >
+      {chapter.previous ? (
+        <Link
+          className="app-button-secondary rounded-md border px-4 py-3 text-center text-sm font-semibold transition"
+          href={hrefForChapter(
+            selectedVersionId,
+            chapter.previous.bookId,
+            chapter.previous.chapter,
+          )}
+        >
+          Previous chapter
+        </Link>
+      ) : (
+        <span />
+      )}
+      {chapter.next ? (
+        <Link
+          className="app-button-secondary rounded-md border px-4 py-3 text-center text-sm font-semibold transition"
+          href={hrefForChapter(
+            selectedVersionId,
+            chapter.next.bookId,
+            chapter.next.chapter,
+          )}
+        >
+          Next chapter
+        </Link>
+      ) : null}
+    </nav>
+  );
+}
+
 function SearchResults({
   search,
   selectedVersionId,
@@ -327,6 +377,11 @@ export function BibleReaderView({
               </footer>
             ) : null}
           </article>
+
+          <ChapterNavigation
+            chapter={chapter}
+            selectedVersionId={selectedVersionId}
+          />
 
           <SearchResults search={search} selectedVersionId={selectedVersionId} />
         </div>

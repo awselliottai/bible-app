@@ -29,6 +29,8 @@ the same provider layer and render normalized responses into the browsing UI.
 The chapter reader includes a study panel beside the Bible text. Highlighting
 text inside the displayed passage automatically primes that exact selection as
 the focus for the next AI study question.
+The UI defaults to a dark reading theme and includes a top-right display toggle
+for users who prefer the lighter theme.
 
 ## API Routes
 

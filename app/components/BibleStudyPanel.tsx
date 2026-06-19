@@ -258,6 +258,17 @@ export function BibleStudyPanel({
     setIsStreaming(false);
   }
 
+  function handleClearChat() {
+    console.log("[component:BibleStudyPanel] clearing study chat", {
+      reference,
+      messageCount: messages.length,
+    });
+    abortRef.current?.abort();
+    setMessages([]);
+    setError("");
+    setIsStreaming(false);
+  }
+
   return (
     <section className="study-panel w-full rounded-lg border p-5 transition-shadow duration-300 lg:sticky lg:top-6 lg:max-h-[calc(100vh-3rem)] lg:overflow-y-auto lg:overscroll-contain">
       <div className="flex items-start justify-between gap-3">
@@ -337,6 +348,15 @@ export function BibleStudyPanel({
         >
           Ask
         </button>
+        {messages.length > 0 ? (
+          <button
+            className="app-button-secondary w-full rounded-md border px-4 py-3 text-sm font-semibold transition"
+            onClick={handleClearChat}
+            type="button"
+          >
+            Clear chat
+          </button>
+        ) : null}
       </form>
     </section>
   );

@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Drizzle Kit generated migrations and introspection output
+    "drizzle/**",
   ]),
 ]);
 

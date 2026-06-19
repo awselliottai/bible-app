@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Bible Reader Framework",
-  description: "Backend-first Bible reader data architecture.",
+  title: "Bible",
+  description: "Read, search, and navigate scripture by version, book, and chapter.",
 };
 
 export default function RootLayout({

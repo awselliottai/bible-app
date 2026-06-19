@@ -12,6 +12,13 @@
   - **Verification:** `pnpm run lint`, `pnpm run typecheck`, and `pnpm run build` passed. Build required elevated permissions because Turbopack binds a local worker port in this environment.
   - **Follow-ups:** None for this correction.
 
+- `00:42` — **General Bible access homepage**
+  - **Summary:** Replaced the implementation-facing backend framework index with a general Bible access view containing translation choices, search, Old/New Testament book browsing, a chapter picker, and a reader preview.
+  - **Why:** The previous homepage was over-fitted to the initial backend prompt and exposed implementation capabilities rather than presenting a normal Bible reader entry point.
+  - **Files:** `app/page.tsx`, `app/layout.tsx`, `public/updates/06-19-26/rolling-log.md`
+  - **Verification:** `pnpm run lint`, `pnpm run typecheck`, and `pnpm run build` passed. Build required elevated permissions because Turbopack binds a local worker port in this environment.
+  - **Follow-ups:** Wire the static browsing controls to real `/read/[version]/[book]/[chapter]` routes when the frontend reader is implemented.
+
 - `01:05` — **Drizzle Kit + Neon setup fix**
   - **Summary:** Fixed broken Drizzle database scripts and configuration. Updated `package.json` commands from deprecated `db:*` prefixes to current Drizzle Kit CLI (`push`, `introspect`, `migrate`). Pointed `drizzle.config.ts` at `lib/db/schema.ts` and `lib/db/relations.ts` instead of missing `./src/db/schema.ts`. Added starter schema/relations files, wired the Neon HTTP client in `lib/db/drizzle.ts`, seeded `drizzle/meta/_journal.json`, and documented the database workflow in `README.md`.
   - **Why:** `pnpm run pull` and `pnpm run generate` were failing due to outdated CLI command names and a missing schema path; Neon connectivity was already valid but tooling could not run.

@@ -1,0 +1,116 @@
+JavaScript/TypeScript
+Free Use Bible API
+TypeScript and JavaScript client for the public Free Use Bible API:
+
+https://bible.helloao.org
+
+
+Quick Start
+
+import { FreeUseBibleApi } from 'free-use-bible-api';
+
+const api = new FreeUseBibleApi();
+
+const available = await api.getAvailableTranslations();
+console.log('Total translations:', available.translations.length);
+
+const books = await api.getTranslationBooks('BSB');
+console.log('Books in BSB:', books.books.length);
+
+const chapter = await api.getTranslationBookChapter('BSB', 'GEN', 1);
+console.log('Verses in Genesis 1:', chapter.numberOfVerses);
+Client Options
+You can customize the client with FreeUseBibleApiOptions:
+
+
+import { FreeUseBibleApi } from 'free-use-bible-api';
+
+const api = new FreeUseBibleApi({
+    endpoint: 'https://bible.helloao.org/',
+    useCache: true,
+});
+endpoint: Base API endpoint.
+useCache: Enables in-memory response caching (default: true).
+API Methods
+Translations
+getAvailableTranslations(endpoint?)
+getTranslationBooks(translation, endpoint?)
+getTranslationBookChapter(translation, book, chapter, endpoint?)
+getCompleteTranslation(translation, endpoint?)
+getCompleteTranslation() disables per-request cache internally because payloads are typically large.
+
+Commentaries
+getAvailableCommentaries(endpoint?)
+getCommentaryBooks(commentary, endpoint?)
+getCommentaryBookChapter(commentary, book, chapter, endpoint?)
+Datasets
+getAvailableDatasets(endpoint?)
+getDatasetBooks(dataset, endpoint?)
+getDatasetBookChapter(dataset, book, chapter, endpoint?)
+Chapter Navigation Helpers
+getNextChapter(chapter, endpoint?)
+getPreviousChapter(chapter, endpoint?)
+These helpers work with translation, commentary, and dataset chapter responses.
+
+Examples
+Get a complete translation
+
+const complete = await api.getCompleteTranslation('BSB');
+console.log(complete.translation.id);
+console.log(complete.books.length);
+Read a commentary chapter
+
+const comm = await api.getCommentaryBookChapter('matthew_henry', 'GEN', 1);
+console.log(comm.book.name);
+Read a dataset chapter
+
+const dataChapter = await api.getDatasetBookChapter(
+    'cross_references',
+    'JHN',
+    3
+);
+console.log(dataChapter.book.name);
+Navigate to next/previous chapter
+
+const current = await api.getTranslationBookChapter('BSB', 'GEN', 1);
+
+const next = await api.getNextChapter(current);
+const previous = await api.getPreviousChapter(current);
+
+console.log(next?.chapter.number);
+console.log(previous?.chapter.number);
+Direct HTTP Endpoints
+Translation endpoints
+GET /api/available_translations.json
+GET /api/{translation}/books.json
+GET /api/{translation}/{book}/{chapter}.json
+GET /api/{translation}/complete.json
+Commentary endpoints
+GET /api/available_commentaries.json
+GET /api/{commentary}/books.json
+GET /api/{commentary}/{book}/{chapter}.json
+Dataset endpoints
+GET /api/available_datasets.json
+GET /api/d/{dataset}/books.json
+GET /api/d/{dataset}/{book}/{chapter}.json
+Example requests:
+
+
+curl https://bible.helloao.org/api/available_translations.json
+curl https://bible.helloao.org/api/BSB/books.json
+curl https://bible.helloao.org/api/BSB/GEN/1.json
+curl https://bible.helloao.org/api/available_commentaries.json
+curl https://bible.helloao.org/api/available_datasets.json
+Error Handling
+Methods throw on non-2xx responses.
+
+A 404 response usually means one of the path values is invalid, for example:
+
+translation
+commentary
+dataset
+book
+chapter
+Notes
+Uses the global fetch API.
+For Node.js, use a runtime that provides fetch (Node 18+ recommended) or polyfill it.

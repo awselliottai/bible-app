@@ -1,36 +1,86 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Bible App
 
-## Getting Started
+Next.js 16 / React 19 application for a reader-centric Bible experience. The
+current implementation focuses on backend data architecture: normalized Bible
+versions, books, chapters, chapter pagination, search, and a Vercel AI SDK route
+prepared for future LLM-assisted study features.
 
-First, run the development server:
+## Data Architecture
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+The Bible provider contract lives in `app/lib/bible/types.ts`:
+
+- `listVersions()` returns normalized translation metadata.
+- `listBooks(versionId)` returns book listings with testament and chapter counts.
+- `getChapter(versionId, bookId, chapter)` returns chapter text as verses plus
+  previous/next chapter pointers.
+- `search(versionId, query)` returns verse-level search results.
+
+The active provider is `helloAoBibleProvider`, backed by the Free Use Bible API
+documented in `public/docs/bible-api-quick-reference.md`.
+
+## API Routes
+
+- `GET /api/bible/versions`
+- `GET /api/bible/[versionId]/books`
+- `GET /api/bible/[versionId]/[bookId]/[chapter]`
+- `GET /api/bible/search?version=BSB&q=love&limit=10`
+- `POST /api/ai/study`
+
+The intended reader route shape is:
+
+```txt
+/read/[version]/[book]/[chapter]
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Chapters are treated as the natural pagination unit for caching, stable links,
+and comparison/version switching.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## AI Readiness
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+The project includes `ai` and `@ai-sdk/openai`. `POST /api/ai/study` streams a
+passage-grounded response using the selected Bible chapter as context.
 
-## Learn More
+Required environment:
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+OPENAI_API_KEY=...
+# Optional
+OPENAI_MODEL=gpt-4.1-mini
+BIBLE_API_ENDPOINT=https://bible.helloao.org
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Database (Neon + Drizzle)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The app uses Neon Postgres with Drizzle ORM. Schema definitions live in
+`lib/db/schema.ts`; the Drizzle client is in `lib/db/drizzle.ts`.
 
-## Deploy on Vercel
+Required environment:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+DATABASE_URL=postgresql://...
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Scripts (Drizzle Kit 0.31+ CLI):
+
+```bash
+pnpm run generate   # create SQL migrations from lib/db/schema.ts
+pnpm run push       # push schema changes directly to Neon (dev)
+pnpm run pull       # introspect Neon and write drizzle/schema.ts
+pnpm run migrate    # apply migrations in drizzle/
+pnpm run studio     # open Drizzle Studio
+```
+
+After `pnpm run pull`, merge any generated table definitions from
+`drizzle/schema.ts` into `lib/db/schema.ts` so `generate` and `push` stay in
+sync with the database.
+
+## Development
+
+```bash
+pnpm run dev
+pnpm run build
+pnpm run lint
+pnpm run typecheck
+```
+
+Open `http://localhost:3000` for the backend framework index.

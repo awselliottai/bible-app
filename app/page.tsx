@@ -1,65 +1,100 @@
-import Image from "next/image";
+const bibleEndpoints = [
+  {
+    label: "Versions",
+    href: "/api/bible/versions",
+    description: "Normalized translation metadata from the active provider.",
+  },
+  {
+    label: "Books",
+    href: "/api/bible/BSB/books",
+    description: "Old and New Testament book listing with chapter counts.",
+  },
+  {
+    label: "Chapter",
+    href: "/api/bible/BSB/JHN/3",
+    description: "Chapter pagination unit with verses and previous/next pointers.",
+  },
+  {
+    label: "Search",
+    href: "/api/bible/search?version=BSB&q=love&limit=10",
+    description: "Provider-backed text search for reader navigation.",
+  },
+];
 
 export default function Home() {
+  console.log("[page:home] rendering Bible app backend framework index");
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <main className="min-h-screen bg-[#f7f4ed] text-[#1d1b16]">
+      <section className="mx-auto flex w-full max-w-6xl flex-col gap-10 px-6 py-10 sm:px-8 lg:px-10">
+        <header className="max-w-3xl">
+          <p className="text-sm font-semibold uppercase tracking-[0.14em] text-[#7a4f2a]">
+            Bible Reader Framework
           </p>
+          <h1 className="mt-3 text-4xl font-semibold leading-tight sm:text-5xl">
+            Backend-first scripture data architecture
+          </h1>
+          <p className="mt-5 text-lg leading-8 text-[#5b554b]">
+            Provider-normalized versions, books, chapters, chapter pagination,
+            search, and an AI study route are ready for a reader-centric
+            frontend.
+          </p>
+        </header>
+
+        <div className="grid gap-4 md:grid-cols-2">
+          {bibleEndpoints.map((endpoint) => (
+            <a
+              className="rounded-lg border border-[#d9ccb7] bg-white p-5 shadow-sm transition hover:border-[#9f7344]"
+              href={endpoint.href}
+              key={endpoint.href}
+            >
+              <div className="flex items-center justify-between gap-4">
+                <h2 className="text-xl font-semibold">{endpoint.label}</h2>
+                <code className="rounded bg-[#f0e7d8] px-2 py-1 text-xs text-[#5f3d1e]">
+                  GET
+                </code>
+              </div>
+              <p className="mt-3 text-sm leading-6 text-[#625b51]">
+                {endpoint.description}
+              </p>
+              <p className="mt-4 break-all font-mono text-sm text-[#7a4f2a]">
+                {endpoint.href}
+              </p>
+            </a>
+          ))}
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+
+        <section className="grid gap-4 lg:grid-cols-3">
+          <div className="rounded-lg border border-[#d9ccb7] bg-[#fffaf2] p-5">
+            <h2 className="text-lg font-semibold">Reader Route Shape</h2>
+            <p className="mt-3 font-mono text-sm text-[#7a4f2a]">
+              /read/[version]/[book]/[chapter]
+            </p>
+            <p className="mt-3 text-sm leading-6 text-[#625b51]">
+              Chapters are the canonical page unit for cacheability, stable
+              links, and previous/next navigation.
+            </p>
+          </div>
+          <div className="rounded-lg border border-[#d9ccb7] bg-[#fffaf2] p-5">
+            <h2 className="text-lg font-semibold">Provider Boundary</h2>
+            <p className="mt-3 text-sm leading-6 text-[#625b51]">
+              The app currently uses Free Use Bible API through a normalized
+              provider interface that can later swap to local JSON, SQLite,
+              API.Bible, YouVersion, or ESV providers.
+            </p>
+          </div>
+          <div className="rounded-lg border border-[#d9ccb7] bg-[#fffaf2] p-5">
+            <h2 className="text-lg font-semibold">AI Route</h2>
+            <p className="mt-3 font-mono text-sm text-[#7a4f2a]">
+              POST /api/ai/study
+            </p>
+            <p className="mt-3 text-sm leading-6 text-[#625b51]">
+              Vercel AI SDK streaming is wired for passage-grounded study
+              responses when OPENAI_API_KEY is configured.
+            </p>
+          </div>
+        </section>
+      </section>
+    </main>
   );
 }

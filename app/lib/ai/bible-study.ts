@@ -1,6 +1,6 @@
 import { openai } from "@ai-sdk/openai";
 import { streamText } from "ai";
-import { bibleProvider } from "@/app/lib/bible/provider";
+import { resolveBibleProvider } from "@/app/lib/bible/provider";
 
 export type BibleStudyPrompt = {
   versionId?: string;
@@ -16,10 +16,12 @@ export async function streamBibleStudyResponse({
   question,
 }: BibleStudyPrompt) {
   console.log("[ai:bible-study] preparing context", versionId, bookId, chapter);
-  const bibleChapter = await bibleProvider.getChapter(versionId, bookId, chapter);
-  const passage = bibleChapter.verses
-    .map((verse) => `${verse.number}. ${verse.text}`)
-    .join("\n");
+  const provider = await resolveBibleProvider(versionId);
+  const bibleChapter = await provider.getChapter(versionId, bookId, chapter);
+  const passage =
+    bibleChapter.verses.length > 0
+      ? bibleChapter.verses.map((verse) => `${verse.number}. ${verse.text}`).join("\n")
+      : JSON.stringify(bibleChapter.contentBlocks ?? bibleChapter.contentHtml ?? "");
 
   return streamText({
     model: openai(process.env.OPENAI_MODEL ?? "gpt-4.1-mini"),

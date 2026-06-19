@@ -1,4 +1,8 @@
 import Link from "next/link";
+import { listBibleVersions } from "@/app/lib/bible/provider";
+import type { BibleVersion } from "@/app/lib/bible/types";
+
+export const dynamic = "force-dynamic";
 
 const oldTestamentBooks = [
   "Genesis",
@@ -40,11 +44,30 @@ const newTestamentBooks = [
   "Revelation",
 ];
 
-const versions = ["BSB", "KJV", "ASV", "WEB"];
 const johnChapters = Array.from({ length: 21 }, (_, index) => index + 1);
 
-export default function Home() {
+function prioritizeVersions(versions: BibleVersion[]) {
+  const preferred = new Set(["BSB", "KJV", "WEB", "ASV", "ESV", "NIV", "NLT"]);
+  const sorted = [...versions].sort((first, second) => {
+    const firstPreferred = preferred.has(first.abbreviation.toUpperCase()) ? 0 : 1;
+    const secondPreferred = preferred.has(second.abbreviation.toUpperCase()) ? 0 : 1;
+
+    if (firstPreferred !== secondPreferred) {
+      return firstPreferred - secondPreferred;
+    }
+
+    return first.abbreviation.localeCompare(second.abbreviation);
+  });
+
+  return sorted.slice(0, 12);
+}
+
+export default async function Home() {
   console.log("[page:home] rendering general Bible access view");
+  const versions = prioritizeVersions(await listBibleVersions());
+  const defaultVersion =
+    versions.find((version) => version.abbreviation === "BSB") ?? versions[0];
+  const defaultVersionId = defaultVersion?.id ?? "BSB";
 
   return (
     <main className="min-h-screen bg-[#fbfaf7] text-[#1f201b]">
@@ -70,13 +93,13 @@ export default function Home() {
               </label>
               <select
                 className="h-11 rounded-md border border-[#d7ccb8] bg-[#fbfaf7] px-3 text-sm font-medium"
-                defaultValue="BSB"
+                defaultValue={defaultVersionId}
                 id="version"
                 name="version"
               >
                 {versions.map((version) => (
-                  <option key={version} value={version}>
-                    {version}
+                  <option key={`${version.source}:${version.id}`} value={version.id}>
+                    {version.abbreviation}
                   </option>
                 ))}
               </select>
@@ -103,10 +126,10 @@ export default function Home() {
             {versions.map((version) => (
               <a
                 className="rounded-md border border-[#d7ccb8] bg-white px-3 py-2 text-sm font-semibold text-[#55442f] transition hover:border-[#8f6b43]"
-                href={`/api/bible/${version}/books`}
-                key={version}
+                href={`/api/bible/${version.id}/books`}
+                key={`${version.source}:${version.id}`}
               >
-                {version}
+                {version.abbreviation}
               </a>
             ))}
           </nav>

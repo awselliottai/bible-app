@@ -1,10 +1,10 @@
 import { bibleError, bibleJson } from "@/app/lib/bible/http";
-import { bibleProvider } from "@/app/lib/bible/provider";
+import { listBibleVersions } from "@/app/lib/bible/provider";
 
 export async function GET() {
   try {
     console.log("[api:bible:versions] request");
-    const versions = await bibleProvider.listVersions();
+    const versions = await listBibleVersions();
     return bibleJson({
       versions,
     });

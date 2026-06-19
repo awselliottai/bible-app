@@ -1,9 +1,9 @@
 # Bible App
 
 Next.js 16 / React 19 application for a reader-centric Bible experience. The
-current implementation focuses on backend data architecture: normalized Bible
-versions, books, chapters, chapter pagination, search, and a Vercel AI SDK route
-prepared for future LLM-assisted study features.
+current implementation includes normalized Bible versions, books, chapters,
+chapter pagination, search, and a Vercel AI SDK route prepared for future
+LLM-assisted study features.
 
 ## Data Architecture
 
@@ -15,8 +15,16 @@ The Bible provider contract lives in `app/lib/bible/types.ts`:
   previous/next chapter pointers.
 - `search(versionId, query)` returns verse-level search results.
 
-The active provider is `helloAoBibleProvider`, backed by the Free Use Bible API
-documented in `public/docs/bible-api-quick-reference.md`.
+The app supports multiple server-side Bible providers behind the same contract:
+
+- `helloAoBibleProvider` for open/free Bible data from HelloAO.
+- `apiBibleProvider` for licensed API.Bible translations available to the
+  configured API key, such as ESV, NIV, NLT, NKJV, NASB, or CSB when included in
+  the API.Bible account plan.
+
+Public API routes resolve the requested version to the right provider. API.Bible
+IDs are normalized behind the provider layer so reader-friendly abbreviations can
+be used when they are returned by `GET /v1/bibles`.
 
 ## API Routes
 
@@ -46,8 +54,28 @@ Required environment:
 OPENAI_API_KEY=...
 # Optional
 OPENAI_MODEL=gpt-4.1-mini
-BIBLE_API_ENDPOINT=https://bible.helloao.org
 ```
+
+## Bible Providers
+
+API.Bible is configured server-side only. Do not prefix these values with
+`NEXT_PUBLIC_`.
+
+```bash
+BIBLE_API_KEY=...
+BIBLE_API_ENDPOINT=https://rest.api.bible
+```
+
+`BIBLE_API_ENDPOINT` may include or omit `/v1`; the provider normalizes it.
+
+HelloAO defaults to `https://bible.helloao.org`. To override it, use:
+
+```bash
+HELLOAO_BIBLE_API_ENDPOINT=https://bible.helloao.org
+```
+
+Copyright and API.Bible FUMS metadata are preserved on normalized chapter
+responses for reader-page rendering.
 
 ## Database (Neon + Drizzle)
 
@@ -83,4 +111,4 @@ pnpm run lint
 pnpm run typecheck
 ```
 
-Open `http://localhost:3000` for the backend framework index.
+Open `http://localhost:3000` for the Bible access page.

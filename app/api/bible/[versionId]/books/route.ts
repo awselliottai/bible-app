@@ -1,5 +1,5 @@
 import { bibleError, bibleJson } from "@/app/lib/bible/http";
-import { bibleProvider } from "@/app/lib/bible/provider";
+import { resolveBibleProvider } from "@/app/lib/bible/provider";
 
 type RouteParams = {
   params: Promise<{
@@ -11,7 +11,8 @@ export async function GET(_request: Request, context: RouteParams) {
   try {
     const { versionId } = await context.params;
     console.log("[api:bible:books] request", versionId);
-    const books = await bibleProvider.listBooks(versionId);
+    const provider = await resolveBibleProvider(versionId);
+    const books = await provider.listBooks(versionId);
     return bibleJson({
       versionId,
       books,

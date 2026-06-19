@@ -1,5 +1,5 @@
 import { bibleError, bibleJson } from "@/app/lib/bible/http";
-import { bibleProvider } from "@/app/lib/bible/provider";
+import { resolveBibleProvider } from "@/app/lib/bible/provider";
 import { BibleProviderError } from "@/app/lib/bible/types";
 
 type RouteParams = {
@@ -20,7 +20,8 @@ export async function GET(_request: Request, context: RouteParams) {
     }
 
     console.log("[api:bible:chapter] request", versionId, bookId, chapterNumber);
-    const normalizedChapter = await bibleProvider.getChapter(
+    const provider = await resolveBibleProvider(versionId);
+    const normalizedChapter = await provider.getChapter(
       versionId,
       bookId,
       chapterNumber,

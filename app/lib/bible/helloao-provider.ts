@@ -31,7 +31,7 @@ type TranslationBooksResponse = {
 };
 
 function endpoint() {
-  return process.env.BIBLE_API_ENDPOINT ?? DEFAULT_ENDPOINT;
+  return process.env.HELLOAO_BIBLE_API_ENDPOINT ?? DEFAULT_ENDPOINT;
 }
 
 function normalizePath(path: string) {

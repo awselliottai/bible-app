@@ -20,6 +20,7 @@ export type BibleVersion = {
   licenseNotice?: string;
   numberOfBooks?: number;
   totalNumberOfChapters?: number;
+  providerId?: string;
 };
 
 export type BibleBook = {
@@ -47,9 +48,16 @@ export type BibleChapter = {
   chapter: number;
   reference: string;
   verses: BibleVerse[];
+  contentHtml?: string;
+  contentBlocks?: unknown[];
   previous?: ChapterPointer;
   next?: ChapterPointer;
   copyright?: string;
+  fums?: {
+    fumsId?: string;
+    fumsJsInclude?: string;
+    fumsJs?: string;
+  };
   source: BibleProviderSource;
 };
 
@@ -68,7 +76,7 @@ export type BibleSearchResponse = {
   versionId: string;
   resultCount: number;
   results: BibleSearchResult[];
-  searchedScope: "complete-translation";
+  searchedScope: "complete-translation" | "provider-search";
 };
 
 export type BibleProvider = {
@@ -84,6 +92,7 @@ export type BibleProvider = {
     query: string,
     options?: {
       limit?: number;
+      offset?: number;
     },
   ): Promise<BibleSearchResponse>;
 };

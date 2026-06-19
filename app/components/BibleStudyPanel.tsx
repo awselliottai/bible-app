@@ -284,17 +284,22 @@ export function BibleStudyPanel({
   }
 
   return (
-    <section className="study-panel w-full rounded-lg border p-5 transition-shadow duration-300 lg:sticky lg:top-6 lg:max-h-[calc(100vh-3rem)] lg:overflow-y-auto lg:overscroll-contain">
+    <section
+      aria-labelledby="study-panel-heading"
+      className="study-panel w-full rounded-lg border p-4 transition-shadow duration-300 sm:p-5 lg:sticky lg:top-6 lg:max-h-[calc(100dvh-3rem)] lg:overflow-y-auto lg:overscroll-contain"
+    >
       <div className="flex items-start justify-between gap-3">
         <div>
           <p className="app-eyebrow text-xs font-semibold uppercase tracking-normal">
             Study
           </p>
-          <h2 className="mt-1 text-lg font-semibold">{reference}</h2>
+          <h2 className="mt-1 text-base font-semibold sm:text-lg" id="study-panel-heading">
+            {reference}
+          </h2>
         </div>
         {isStreaming ? (
           <button
-            className="app-button-secondary rounded-md border px-3 py-2 text-xs font-semibold transition"
+            className="app-button-secondary min-h-11 rounded-md border px-3 py-2 text-xs font-semibold transition"
             onClick={handleStop}
             type="button"
           >
@@ -313,7 +318,11 @@ export function BibleStudyPanel({
       </div>
 
       {messages.length > 0 ? (
-        <div className="mt-4 max-h-96 space-y-3 overflow-auto pr-1">
+        <div
+          aria-live="polite"
+          aria-relevant="additions text"
+          className="mt-4 max-h-72 space-y-3 overflow-auto pr-1 sm:max-h-96"
+        >
           {messages.map((message, index) => (
             <div
               className={`rounded-md border p-3 text-sm leading-6 ${
@@ -343,7 +352,7 @@ export function BibleStudyPanel({
       ) : null}
 
       {error ? (
-        <p className="study-error mt-3 rounded-md border p-3 text-sm">
+        <p className="study-error mt-3 rounded-md border p-3 text-sm" role="alert">
           {error}
         </p>
       ) : null}
@@ -353,14 +362,14 @@ export function BibleStudyPanel({
           Ask a question
         </label>
         <textarea
-          className="app-control min-h-28 w-full resize-y rounded-md border p-3 text-sm leading-6 outline-none transition"
+          className="app-control min-h-28 w-full resize-y rounded-md border p-3 text-base leading-6 outline-none transition sm:text-sm"
           id="study-question"
           onChange={(event) => setQuestion(event.target.value)}
           placeholder="Ask about this passage"
           value={question}
         />
         <button
-          className="app-button-primary w-full rounded-md px-4 py-3 text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-60"
+          className="app-button-primary min-h-11 w-full rounded-md px-4 py-3 text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-60"
           disabled={isStreaming || question.trim().length === 0}
           type="submit"
         >
@@ -368,7 +377,7 @@ export function BibleStudyPanel({
         </button>
         {messages.length > 0 ? (
           <button
-            className="app-button-secondary w-full rounded-md border px-4 py-3 text-sm font-semibold transition"
+            className="app-button-secondary min-h-11 w-full rounded-md border px-4 py-3 text-sm font-semibold transition"
             onClick={handleClearChat}
             type="button"
           >

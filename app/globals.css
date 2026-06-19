@@ -55,6 +55,38 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  overflow-x: clip;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+.skip-link {
+  background: var(--accent);
+  border-radius: 0.375rem;
+  color: var(--accent-contrast);
+  font-size: 0.875rem;
+  font-weight: 600;
+  left: max(1rem, env(safe-area-inset-left));
+  padding: 0.75rem 1rem;
+  position: absolute;
+  text-decoration: none;
+  top: max(1rem, env(safe-area-inset-top));
+  transform: translateY(-200%);
+  transition: transform 0.2s ease;
+  z-index: 100;
+}
+
+.skip-link:focus-visible {
+  transform: translateY(0);
+}
+
+:where(a, button, input, select, textarea, summary):focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+:where(a, button, input, select, textarea, summary):focus:not(:focus-visible) {
+  outline: none;
 }
 
 ::selection {
@@ -109,7 +141,8 @@ body {
   color: var(--foreground);
 }
 
-.app-control:focus {
+.app-control:focus,
+.app-control:focus-visible {
   border-color: var(--accent);
 }
 
@@ -262,6 +295,52 @@ body {
   border-color: var(--border);
   color: var(--foreground);
   box-shadow: var(--shadow);
+  min-height: 2.75rem;
+  min-width: 2.75rem;
+  right: max(1rem, env(safe-area-inset-right));
+  top: max(1rem, env(safe-area-inset-top));
+}
+
+.version-nav {
+  max-height: 8.5rem;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+}
+
+.book-nav-details > summary {
+  cursor: pointer;
+  list-style: none;
+}
+
+.book-nav-details > summary::-webkit-details-marker {
+  display: none;
+}
+
+.book-nav-content {
+  display: none;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.book-nav-details[open] .book-nav-content {
+  display: flex;
+}
+
+@media (min-width: 64rem) {
+  .book-nav-details > summary {
+    display: none;
+  }
+
+  .book-nav-content {
+    display: flex;
+    margin-top: 0;
+  }
+}
+
+.chapter-chip {
+  min-height: 2.75rem;
+  min-width: 2.75rem;
 }
 
 .theme-toggle:hover {

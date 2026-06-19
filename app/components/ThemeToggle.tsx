@@ -35,7 +35,7 @@ export function ThemeToggle() {
   return (
     <button
       aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} display`}
-      className="theme-toggle fixed right-4 top-4 z-50 rounded-full border px-3 py-2 text-xs font-semibold uppercase tracking-normal backdrop-blur transition"
+      className="theme-toggle fixed z-50 inline-flex items-center justify-center rounded-full border px-3 py-2 text-xs font-semibold uppercase tracking-normal backdrop-blur transition"
       onClick={toggleTheme}
       suppressHydrationWarning
       type="button"

@@ -89,3 +89,10 @@
   - **Files:** `app/components/BibleStudyPanel.tsx`, `app/globals.css`, `public/updates/06-19-26/rolling-log.md`
   - **Verification:** `pnpm run typecheck` and `pnpm run lint` passed.
   - **Follow-ups:** None.
+
+- `02:10` — **Mobile-responsive and accessible reader polish**
+  - **Summary:** Reworked the reader layout and global styles for mobile-first use: scripture and chapter tools now appear before the book browser on small screens, the book list collapses behind a mobile disclosure control, quick version pills hide below `lg` in favor of the search-form version select, touch targets meet ~44px minimums, focus-visible rings were added site-wide, a skip-to-scripture link and viewport metadata were added, and study-panel streaming/errors gained live-region and alert semantics.
+  - **Why:** The reader needed to stay fully functional on phones and tablets without sacrificing keyboard/screen-reader accessibility or desktop reading workflows.
+  - **Files:** `app/globals.css`, `app/layout.tsx`, `app/components/BibleReaderView.tsx`, `app/components/BibleStudyPanel.tsx`, `app/components/ThemeToggle.tsx`, `public/updates/06-19-26/rolling-log.md`
+  - **Verification:** `pnpm run lint`, `pnpm run typecheck`, and `pnpm run build` passed.
+  - **Follow-ups:** Spot-check on real iOS/Android devices for safe-area and text-selection behavior in the study panel.

@@ -57,24 +57,25 @@ function ReaderHeader({
 
   return (
     <section className="app-header border-b">
-      <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 px-5 py-6 sm:px-8 lg:px-10">
+      <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 px-4 py-5 pr-20 sm:px-8 sm:pr-24 sm:py-6 lg:px-10 lg:pr-10">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-          <div>
+          <div className="min-w-0">
             <Link
               className="app-link text-sm font-semibold uppercase tracking-normal transition"
               href="/"
             >
               Scripture Reader
             </Link>
-            <h1 className="mt-2 text-4xl font-semibold tracking-normal sm:text-5xl">
+            <h1 className="mt-2 text-3xl font-semibold tracking-normal sm:text-4xl lg:text-5xl">
               Bible
             </h1>
           </div>
 
           <form
             action="/search"
-            className="app-card flex w-full flex-col gap-3 rounded-lg border p-3 sm:flex-row lg:max-w-2xl"
+            className="app-card flex w-full min-w-0 flex-col gap-3 rounded-lg border p-3 sm:flex-row lg:max-w-2xl"
             method="get"
+            role="search"
           >
             <label className="sr-only" htmlFor="version">
               Version
@@ -104,15 +105,22 @@ function ReaderHeader({
               type="search"
             />
             <input name="limit" type="hidden" value="20" />
-            <button className="app-button-primary h-11 rounded-md px-5 text-sm font-semibold transition">
+            <button
+              className="app-button-primary h-11 w-full rounded-md px-5 text-sm font-semibold transition sm:w-auto"
+              type="submit"
+            >
               Search
             </button>
           </form>
         </div>
 
-        <nav className="flex flex-wrap gap-2" aria-label="Bible versions">
+        <nav
+          aria-label="Quick version switcher"
+          className="version-nav hidden flex-wrap gap-2 lg:flex"
+        >
           {versions.map((version) => (
             <Link
+              aria-current={version.id === selectedVersionId ? "page" : undefined}
               className={`rounded-md border px-3 py-2 text-sm font-semibold transition ${
                 version.id === selectedVersionId
                   ? "app-pill-active"
@@ -146,26 +154,30 @@ function BookList({
   const testamentBooks = booksByTestament(books, testament);
 
   return (
-    <section>
+    <section aria-labelledby={`book-list-${testament}`}>
       <div className="app-divider flex items-center justify-between border-b pb-2">
-        <h2 className="text-lg font-semibold">{title}</h2>
+        <h2 className="text-base font-semibold sm:text-lg" id={`book-list-${testament}`}>
+          {title}
+        </h2>
         <span className="app-muted text-sm">{testamentBooks.length}</span>
       </div>
-      <div className="mt-3 grid grid-cols-2 gap-2 lg:grid-cols-1">
+      <ul className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-1">
         {testamentBooks.map((book) => (
-          <Link
-            className={`rounded-md px-2 py-2 text-left text-sm font-medium transition ${
-              book.id === selectedBookId
-                ? "book-link-active"
-                : "book-link"
-            }`}
-            href={hrefForChapter(selectedVersionId, book.id, 1)}
-            key={book.id}
-          >
-            {book.name}
-          </Link>
+          <li key={book.id}>
+            <Link
+              aria-current={book.id === selectedBookId ? "page" : undefined}
+              className={`block min-h-11 rounded-md px-2 py-2.5 text-left text-sm font-medium transition ${
+                book.id === selectedBookId
+                  ? "book-link-active"
+                  : "book-link"
+              }`}
+              href={hrefForChapter(selectedVersionId, book.id, 1)}
+            >
+              {book.name}
+            </Link>
+          </li>
         ))}
-      </div>
+      </ul>
     </section>
   );
 }
@@ -175,7 +187,7 @@ function ChapterBody({ chapter }: { chapter: BibleChapter }) {
     return (
       <div
         data-bible-passage
-        className="bible-content-html scripture-body space-y-5 p-5 text-lg leading-8"
+        className="bible-content-html scripture-body space-y-5 p-4 text-base leading-7 sm:p-5 sm:text-lg sm:leading-8"
         dangerouslySetInnerHTML={{ __html: chapter.contentHtml }}
       />
     );
@@ -183,7 +195,7 @@ function ChapterBody({ chapter }: { chapter: BibleChapter }) {
 
   return (
     <div
-      className="scripture-body space-y-5 p-5 text-lg leading-8"
+      className="scripture-body space-y-5 p-4 text-base leading-7 sm:p-5 sm:text-lg sm:leading-8"
       data-bible-passage
     >
       {chapter.verses.map((verse) => (
@@ -216,11 +228,11 @@ function ChapterNavigation({
   return (
     <nav
       aria-label="Chapter navigation"
-      className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"
+      className="flex flex-col gap-3 sm:flex-row sm:items-stretch sm:justify-between"
     >
       {chapter.previous ? (
         <Link
-          className="app-button-secondary rounded-md border px-4 py-3 text-center text-sm font-semibold transition"
+          className="app-button-secondary flex min-h-11 items-center justify-center rounded-md border px-4 py-3 text-center text-sm font-semibold transition sm:flex-1 lg:flex-none"
           href={hrefForChapter(
             selectedVersionId,
             chapter.previous.bookId,
@@ -230,11 +242,11 @@ function ChapterNavigation({
           Previous chapter
         </Link>
       ) : (
-        <span />
+        <span className="hidden sm:block sm:flex-1 lg:hidden" />
       )}
       {chapter.next ? (
         <Link
-          className="app-button-secondary rounded-md border px-4 py-3 text-center text-sm font-semibold transition"
+          className="app-button-secondary flex min-h-11 items-center justify-center rounded-md border px-4 py-3 text-center text-sm font-semibold transition sm:flex-1 lg:flex-none"
           href={hrefForChapter(
             selectedVersionId,
             chapter.next.bookId,
@@ -271,7 +283,7 @@ function SearchResults({
         {search.results.length > 0 ? (
           search.results.map((result) => (
             <Link
-              className="search-result-link block rounded-md border p-3 transition"
+              className="search-result-link block min-h-11 rounded-md border p-3 transition"
               href={hrefForChapter(selectedVersionId, result.bookId, result.chapter)}
               key={`${result.reference}:${result.text}`}
             >
@@ -314,37 +326,54 @@ export function BibleReaderView({
         selectedVersionId={selectedVersionId}
       />
 
-      <section className="mx-auto grid w-full max-w-7xl gap-6 px-5 py-6 sm:px-8 lg:grid-cols-[280px_minmax(0,1fr)_320px] lg:px-10">
-        <aside className="flex flex-col gap-6">
-          <BookList
-            books={books}
-            selectedBookId={chapter.bookId}
-            selectedVersionId={selectedVersionId}
-            testament="old"
-            title="Old Testament"
-          />
-          <BookList
-            books={books}
-            selectedBookId={chapter.bookId}
-            selectedVersionId={selectedVersionId}
-            testament="new"
-            title="New Testament"
-          />
+      <section className="mx-auto grid w-full max-w-7xl gap-6 px-4 py-5 sm:px-8 sm:py-6 lg:grid-cols-[280px_minmax(0,1fr)_320px] lg:px-10">
+        <aside
+          aria-label="Book navigation"
+          className="order-3 flex flex-col gap-6 lg:order-1"
+        >
+          <details className="book-nav-details app-card rounded-lg border p-4 lg:border-0 lg:bg-transparent lg:p-0 lg:shadow-none">
+            <summary className="flex min-h-11 items-center justify-between gap-3 text-base font-semibold lg:hidden">
+              Browse books
+              <span className="app-muted text-sm font-medium">Show / hide</span>
+            </summary>
+            <div className="book-nav-content mt-4 lg:mt-0">
+              <BookList
+                books={books}
+                selectedBookId={chapter.bookId}
+                selectedVersionId={selectedVersionId}
+                testament="old"
+                title="Old Testament"
+              />
+              <BookList
+                books={books}
+                selectedBookId={chapter.bookId}
+                selectedVersionId={selectedVersionId}
+                testament="new"
+                title="New Testament"
+              />
+            </div>
+          </details>
         </aside>
 
-        <div className="flex flex-col gap-6">
-          <article className="app-card rounded-lg border">
-            <header className="app-divider flex flex-col gap-4 border-b p-5 sm:flex-row sm:items-center sm:justify-between">
-              <div>
+        <div className="order-1 flex min-w-0 flex-col gap-6 lg:order-2">
+          <article
+            className="app-card rounded-lg border"
+            id="reader-content"
+            tabIndex={-1}
+          >
+            <header className="app-divider flex flex-col gap-4 border-b p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
+              <div className="min-w-0">
                 <p className="app-eyebrow text-sm font-semibold uppercase tracking-normal">
                   {selectedVersionLabel}
                 </p>
-                <h2 className="mt-1 text-3xl font-semibold">{chapter.reference}</h2>
+                <h2 className="mt-1 text-2xl font-semibold sm:text-3xl">
+                  {chapter.reference}
+                </h2>
               </div>
-              <div className="flex gap-2">
+              <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row">
                 {chapter.previous ? (
                   <Link
-                    className="app-button-secondary rounded-md border px-3 py-2 text-sm font-semibold transition"
+                    className="app-button-secondary flex min-h-11 items-center justify-center rounded-md border px-3 py-2 text-center text-sm font-semibold transition"
                     href={hrefForChapter(
                       selectedVersionId,
                       chapter.previous.bookId,
@@ -356,7 +385,7 @@ export function BibleReaderView({
                 ) : null}
                 {chapter.next ? (
                   <Link
-                    className="app-button-secondary rounded-md border px-3 py-2 text-sm font-semibold transition"
+                    className="app-button-secondary flex min-h-11 items-center justify-center rounded-md border px-3 py-2 text-center text-sm font-semibold transition"
                     href={hrefForChapter(
                       selectedVersionId,
                       chapter.next.bookId,
@@ -386,24 +415,43 @@ export function BibleReaderView({
           <SearchResults search={search} selectedVersionId={selectedVersionId} />
         </div>
 
-        <aside className="flex flex-col gap-6">
-          <section className="app-card rounded-lg border p-5">
-            <h2 className="text-lg font-semibold">{book?.name ?? chapter.bookId}</h2>
-            <div className="mt-4 grid grid-cols-7 gap-2">
-              {chapters.map((chapterNumber) => (
-                <Link
-                  className={`flex aspect-square items-center justify-center rounded-md border text-sm font-semibold transition ${
-                    chapterNumber === chapter.chapter
-                      ? "chapter-chip-active"
-                      : "chapter-chip"
-                  }`}
-                  href={hrefForChapter(selectedVersionId, chapter.bookId, chapterNumber)}
-                  key={chapterNumber}
-                >
-                  {chapterNumber}
-                </Link>
-              ))}
-            </div>
+        <aside
+          aria-label="Chapter picker and study tools"
+          className="order-2 flex flex-col gap-6 lg:order-3"
+        >
+          <section
+            aria-labelledby="chapter-picker-heading"
+            className="app-card rounded-lg border p-4 sm:p-5"
+          >
+            <h2 className="text-base font-semibold sm:text-lg" id="chapter-picker-heading">
+              {book?.name ?? chapter.bookId}
+            </h2>
+            <nav aria-label={`Chapters in ${book?.name ?? chapter.bookId}`}>
+              <ul className="mt-4 grid grid-cols-5 gap-2 sm:grid-cols-6 md:grid-cols-7">
+                {chapters.map((chapterNumber) => (
+                  <li key={chapterNumber}>
+                    <Link
+                      aria-current={
+                        chapterNumber === chapter.chapter ? "page" : undefined
+                      }
+                      aria-label={`Chapter ${chapterNumber}`}
+                      className={`chapter-chip flex aspect-square items-center justify-center rounded-md border text-sm font-semibold transition ${
+                        chapterNumber === chapter.chapter
+                          ? "chapter-chip-active"
+                          : "chapter-chip"
+                      }`}
+                      href={hrefForChapter(
+                        selectedVersionId,
+                        chapter.bookId,
+                        chapterNumber,
+                      )}
+                    >
+                      {chapterNumber}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </nav>
           </section>
 
           <BibleStudyPanel

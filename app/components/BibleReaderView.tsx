@@ -56,12 +56,12 @@ function ReaderHeader({
   console.log("[component:BibleReaderView] rendering reader header", selectedVersionId);
 
   return (
-    <section className="border-b border-[#dfd8c9] bg-[#f1eee6]">
+    <section className="app-header border-b">
       <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 px-5 py-6 sm:px-8 lg:px-10">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <Link
-              className="text-sm font-semibold uppercase tracking-[0.16em] text-[#6f5336] transition hover:text-[#4f3a26]"
+              className="app-link text-sm font-semibold uppercase tracking-normal transition"
               href="/"
             >
               Scripture Reader
@@ -73,14 +73,14 @@ function ReaderHeader({
 
           <form
             action="/search"
-            className="flex w-full flex-col gap-3 rounded-lg border border-[#d7ccb8] bg-white p-3 shadow-sm sm:flex-row lg:max-w-2xl"
+            className="app-card flex w-full flex-col gap-3 rounded-lg border p-3 sm:flex-row lg:max-w-2xl"
             method="get"
           >
             <label className="sr-only" htmlFor="version">
               Version
             </label>
             <select
-              className="h-11 rounded-md border border-[#d7ccb8] bg-[#fbfaf7] px-3 text-sm font-medium"
+              className="app-control h-11 rounded-md border px-3 text-sm font-medium"
               defaultValue={selectedVersionId}
               id="version"
               name="version"
@@ -96,7 +96,7 @@ function ReaderHeader({
               Search
             </label>
             <input
-              className="h-11 min-w-0 flex-1 rounded-md border border-[#d7ccb8] px-3 text-base outline-none focus:border-[#8f6b43]"
+              className="app-control h-11 min-w-0 flex-1 rounded-md border px-3 text-base outline-none transition"
               defaultValue={searchQuery}
               id="query"
               name="q"
@@ -104,7 +104,7 @@ function ReaderHeader({
               type="search"
             />
             <input name="limit" type="hidden" value="20" />
-            <button className="h-11 rounded-md bg-[#33433a] px-5 text-sm font-semibold text-white transition hover:bg-[#28362f]">
+            <button className="app-button-primary h-11 rounded-md px-5 text-sm font-semibold transition">
               Search
             </button>
           </form>
@@ -115,8 +115,8 @@ function ReaderHeader({
             <Link
               className={`rounded-md border px-3 py-2 text-sm font-semibold transition ${
                 version.id === selectedVersionId
-                  ? "border-[#33433a] bg-[#33433a] text-white"
-                  : "border-[#d7ccb8] bg-white text-[#55442f] hover:border-[#8f6b43]"
+                  ? "app-pill-active"
+                  : "app-pill"
               }`}
               href={`/read/${encodeURIComponent(version.id)}`}
               key={`${version.source}:${version.id}`}
@@ -147,17 +147,17 @@ function BookList({
 
   return (
     <section>
-      <div className="flex items-center justify-between border-b border-[#dfd8c9] pb-2">
+      <div className="app-divider flex items-center justify-between border-b pb-2">
         <h2 className="text-lg font-semibold">{title}</h2>
-        <span className="text-sm text-[#766d60]">{testamentBooks.length}</span>
+        <span className="app-muted text-sm">{testamentBooks.length}</span>
       </div>
       <div className="mt-3 grid grid-cols-2 gap-2 lg:grid-cols-1">
         {testamentBooks.map((book) => (
           <Link
             className={`rounded-md px-2 py-2 text-left text-sm font-medium transition ${
               book.id === selectedBookId
-                ? "bg-[#33433a] text-white"
-                : "text-[#3f3d35] hover:bg-[#efe8dc]"
+                ? "book-link-active"
+                : "book-link"
             }`}
             href={hrefForChapter(selectedVersionId, book.id, 1)}
             key={book.id}
@@ -175,7 +175,7 @@ function ChapterBody({ chapter }: { chapter: BibleChapter }) {
     return (
       <div
         data-bible-passage
-        className="bible-content-html space-y-5 p-5 text-lg leading-8 text-[#2e3029]"
+        className="bible-content-html scripture-body space-y-5 p-5 text-lg leading-8"
         dangerouslySetInnerHTML={{ __html: chapter.contentHtml }}
       />
     );
@@ -183,12 +183,12 @@ function ChapterBody({ chapter }: { chapter: BibleChapter }) {
 
   return (
     <div
-      className="space-y-5 p-5 text-lg leading-8 text-[#2e3029]"
+      className="scripture-body space-y-5 p-5 text-lg leading-8"
       data-bible-passage
     >
       {chapter.verses.map((verse) => (
         <p key={`${chapter.reference}:${verse.number}`}>
-          <sup className="mr-1 text-sm font-semibold text-[#8a6a45]">
+          <sup className="verse-number mr-1 text-sm font-semibold">
             {verse.number}
           </sup>
           {verse.text}
@@ -212,29 +212,29 @@ function SearchResults({
   console.log("[component:BibleReaderView] rendering search results", search.query);
 
   return (
-    <section className="rounded-lg border border-[#dfd8c9] bg-white p-5 shadow-sm">
-      <div className="flex items-baseline justify-between gap-3 border-b border-[#dfd8c9] pb-3">
+    <section className="app-card rounded-lg border p-5">
+      <div className="app-divider flex items-baseline justify-between gap-3 border-b pb-3">
         <h2 className="text-lg font-semibold">Search results</h2>
-        <span className="text-sm text-[#766d60]">{search.resultCount}</span>
+        <span className="app-muted text-sm">{search.resultCount}</span>
       </div>
       <div className="mt-4 space-y-4">
         {search.results.length > 0 ? (
           search.results.map((result) => (
             <Link
-              className="block rounded-md border border-[#eee5d6] p-3 transition hover:border-[#8f6b43] hover:bg-[#fbfaf7]"
+              className="search-result-link block rounded-md border p-3 transition"
               href={hrefForChapter(selectedVersionId, result.bookId, result.chapter)}
               key={`${result.reference}:${result.text}`}
             >
-              <span className="block text-sm font-semibold text-[#6f5336]">
+              <span className="app-eyebrow block text-sm font-semibold">
                 {result.reference}
               </span>
-              <span className="mt-1 block text-sm leading-6 text-[#3f3d35]">
+              <span className="mt-1 block text-sm leading-6">
                 {result.text}
               </span>
             </Link>
           ))
         ) : (
-          <p className="text-sm leading-6 text-[#766d60]">
+          <p className="app-muted text-sm leading-6">
             No matching verses were found for this search.
           </p>
         )}
@@ -257,7 +257,7 @@ export function BibleReaderView({
   const selectedVersionLabel = versionName(versions, selectedVersionId);
 
   return (
-    <main className="min-h-screen bg-[#fbfaf7] text-[#1f201b]">
+    <main className="app-main min-h-screen">
       <ReaderHeader
         searchQuery={searchQuery}
         versions={versions}
@@ -283,10 +283,10 @@ export function BibleReaderView({
         </aside>
 
         <div className="flex flex-col gap-6">
-          <article className="rounded-lg border border-[#dfd8c9] bg-white shadow-sm">
-            <header className="flex flex-col gap-4 border-b border-[#dfd8c9] p-5 sm:flex-row sm:items-center sm:justify-between">
+          <article className="app-card rounded-lg border">
+            <header className="app-divider flex flex-col gap-4 border-b p-5 sm:flex-row sm:items-center sm:justify-between">
               <div>
-                <p className="text-sm font-semibold uppercase tracking-[0.12em] text-[#6f5336]">
+                <p className="app-eyebrow text-sm font-semibold uppercase tracking-normal">
                   {selectedVersionLabel}
                 </p>
                 <h2 className="mt-1 text-3xl font-semibold">{chapter.reference}</h2>
@@ -294,7 +294,7 @@ export function BibleReaderView({
               <div className="flex gap-2">
                 {chapter.previous ? (
                   <Link
-                    className="rounded-md border border-[#d7ccb8] px-3 py-2 text-sm font-semibold text-[#55442f] transition hover:border-[#8f6b43]"
+                    className="app-button-secondary rounded-md border px-3 py-2 text-sm font-semibold transition"
                     href={hrefForChapter(
                       selectedVersionId,
                       chapter.previous.bookId,
@@ -306,7 +306,7 @@ export function BibleReaderView({
                 ) : null}
                 {chapter.next ? (
                   <Link
-                    className="rounded-md border border-[#d7ccb8] px-3 py-2 text-sm font-semibold text-[#55442f] transition hover:border-[#8f6b43]"
+                    className="app-button-secondary rounded-md border px-3 py-2 text-sm font-semibold transition"
                     href={hrefForChapter(
                       selectedVersionId,
                       chapter.next.bookId,
@@ -322,7 +322,7 @@ export function BibleReaderView({
             <ChapterBody chapter={chapter} />
 
             {chapter.copyright ? (
-              <footer className="border-t border-[#dfd8c9] p-5 text-sm leading-6 text-[#766d60]">
+              <footer className="app-divider app-muted border-t p-5 text-sm leading-6">
                 {chapter.copyright}
               </footer>
             ) : null}
@@ -332,15 +332,15 @@ export function BibleReaderView({
         </div>
 
         <aside className="flex flex-col gap-6">
-          <section className="rounded-lg border border-[#dfd8c9] bg-white p-5 shadow-sm">
+          <section className="app-card rounded-lg border p-5">
             <h2 className="text-lg font-semibold">{book?.name ?? chapter.bookId}</h2>
             <div className="mt-4 grid grid-cols-7 gap-2">
               {chapters.map((chapterNumber) => (
                 <Link
                   className={`flex aspect-square items-center justify-center rounded-md border text-sm font-semibold transition ${
                     chapterNumber === chapter.chapter
-                      ? "border-[#33433a] bg-[#33433a] text-white"
-                      : "border-[#d7ccb8] text-[#55442f] hover:border-[#8f6b43] hover:bg-[#f5efe5]"
+                      ? "chapter-chip-active"
+                      : "chapter-chip"
                   }`}
                   href={hrefForChapter(selectedVersionId, chapter.bookId, chapterNumber)}
                   key={chapterNumber}

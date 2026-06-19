@@ -46,7 +46,7 @@ function renderInlineCitations(text: string) {
     const cleanUrl = cleanCitationUrl(url);
     nodes.push(
       <a
-        className="font-semibold text-[#315f63] underline decoration-[#9bbabd] underline-offset-2 transition hover:text-[#21484b]"
+        className="citation-link font-semibold underline underline-offset-2 transition"
         href={cleanUrl}
         key={`${cleanUrl}-${index}`}
         rel="noreferrer"
@@ -76,7 +76,7 @@ function renderResponseText(content: string) {
     if (bulletText) {
       return (
         <div className="flex gap-2" key={`${line}-${index}`}>
-          <span aria-hidden="true" className="text-[#6f5336]">
+          <span aria-hidden="true" className="citation-bullet">
             •
           </span>
           <span>{renderInlineCitations(bulletText)}</span>
@@ -259,17 +259,17 @@ export function BibleStudyPanel({
   }
 
   return (
-    <section className="w-full rounded-lg border border-[#dfd8c9] bg-[#eef3ef] p-5 transition-shadow duration-300 lg:sticky lg:top-6 lg:max-h-[calc(100vh-3rem)] lg:overflow-y-auto lg:overscroll-contain">
+    <section className="study-panel w-full rounded-lg border p-5 transition-shadow duration-300 lg:sticky lg:top-6 lg:max-h-[calc(100vh-3rem)] lg:overflow-y-auto lg:overscroll-contain">
       <div className="flex items-start justify-between gap-3">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#6f5336]">
+          <p className="app-eyebrow text-xs font-semibold uppercase tracking-normal">
             Study
           </p>
           <h2 className="mt-1 text-lg font-semibold">{reference}</h2>
         </div>
         {isStreaming ? (
           <button
-            className="rounded-md border border-[#bac8be] px-3 py-2 text-xs font-semibold text-[#33433a] transition hover:border-[#33433a]"
+            className="app-button-secondary rounded-md border px-3 py-2 text-xs font-semibold transition"
             onClick={handleStop}
             type="button"
           >
@@ -278,11 +278,11 @@ export function BibleStudyPanel({
         ) : null}
       </div>
 
-      <div className="mt-4 rounded-md border border-[#cbd8ce] bg-white p-3">
-        <p className="text-xs font-semibold uppercase tracking-[0.12em] text-[#6f5336]">
+      <div className="study-inner-card mt-4 rounded-md border p-3">
+        <p className="app-eyebrow text-xs font-semibold uppercase tracking-normal">
           Selected
         </p>
-        <p className="mt-2 max-h-32 overflow-auto text-sm leading-6 text-[#3f3d35]">
+        <p className="mt-2 max-h-32 overflow-auto text-sm leading-6">
           {selectedText || "Full chapter"}
         </p>
       </div>
@@ -293,12 +293,12 @@ export function BibleStudyPanel({
             <div
               className={`rounded-md border p-3 text-sm leading-6 ${
                 message.role === "user"
-                  ? "border-[#d7ccb8] bg-[#fbfaf7] text-[#2e3029]"
-                  : "border-[#cbd8ce] bg-white text-[#2e3029]"
+                  ? "study-message-user"
+                  : "study-message-assistant"
               }`}
               key={`${message.role}-${index}`}
             >
-              <p className="mb-1 text-xs font-semibold uppercase tracking-[0.12em] text-[#6f5336]">
+              <p className="app-eyebrow mb-1 text-xs font-semibold uppercase tracking-normal">
                 {message.role === "user" ? "Question" : "Response"}
               </p>
               <div className="space-y-2 whitespace-pre-wrap">
@@ -314,7 +314,7 @@ export function BibleStudyPanel({
       ) : null}
 
       {error ? (
-        <p className="mt-3 rounded-md border border-[#d8b7a8] bg-[#fff7f3] p-3 text-sm text-[#7a3525]">
+        <p className="study-error mt-3 rounded-md border p-3 text-sm">
           {error}
         </p>
       ) : null}
@@ -324,14 +324,14 @@ export function BibleStudyPanel({
           Ask a question
         </label>
         <textarea
-          className="min-h-28 w-full resize-y rounded-md border border-[#cbd8ce] bg-white p-3 text-sm leading-6 text-[#1f201b] outline-none transition focus:border-[#33433a]"
+          className="app-control min-h-28 w-full resize-y rounded-md border p-3 text-sm leading-6 outline-none transition"
           id="study-question"
           onChange={(event) => setQuestion(event.target.value)}
           placeholder="Ask about this passage"
           value={question}
         />
         <button
-          className="w-full rounded-md bg-[#33433a] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#28362f] disabled:cursor-not-allowed disabled:opacity-60"
+          className="app-button-primary w-full rounded-md px-4 py-3 text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-60"
           disabled={isStreaming || question.trim().length === 0}
           type="submit"
         >

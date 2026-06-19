@@ -1,4 +1,15 @@
-import { streamBibleStudyResponse } from "@/app/lib/ai/bible-study";
+import {
+  type BibleStudySearchContextSize,
+  streamBibleStudyResponse,
+} from "@/app/lib/ai/bible-study";
+
+export const maxDuration = 60;
+
+const searchContextSizes = new Set<BibleStudySearchContextSize>([
+  "low",
+  "medium",
+  "high",
+]);
 
 export async function POST(request: Request) {
   try {
@@ -7,6 +18,8 @@ export async function POST(request: Request) {
       bookId?: string;
       chapter?: number;
       question?: string;
+      webSearch?: boolean;
+      searchContextSize?: BibleStudySearchContextSize;
     };
 
     if (!body.bookId || !body.chapter || !body.question) {
@@ -21,12 +34,35 @@ export async function POST(request: Request) {
       );
     }
 
-    console.log("[api:ai:study] request", body.versionId, body.bookId, body.chapter);
+    if (
+      body.searchContextSize &&
+      !searchContextSizes.has(body.searchContextSize)
+    ) {
+      console.log("[api:ai:study] invalid search context size", body.searchContextSize);
+      return Response.json(
+        {
+          error: "searchContextSize must be one of: low, medium, high.",
+        },
+        {
+          status: 400,
+        },
+      );
+    }
+
+    console.log("[api:ai:study] request", {
+      versionId: body.versionId,
+      bookId: body.bookId,
+      chapter: body.chapter,
+      webSearch: body.webSearch ?? true,
+      searchContextSize: body.searchContextSize ?? "medium",
+    });
     const result = await streamBibleStudyResponse({
       versionId: body.versionId,
       bookId: body.bookId,
       chapter: body.chapter,
       question: body.question,
+      webSearch: body.webSearch,
+      searchContextSize: body.searchContextSize,
     });
 
     return result.toTextStreamResponse();

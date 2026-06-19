@@ -2,8 +2,8 @@
 
 Next.js 16 / React 19 application for a reader-centric Bible experience. The
 current implementation includes normalized Bible versions, books, chapters,
-chapter pagination, search, and a Vercel AI SDK route prepared for future
-LLM-assisted study features.
+chapter pagination, search, and a Vercel AI SDK study route that can answer
+Bible questions with OpenAI-hosted web search enabled.
 
 ## Data Architecture
 
@@ -49,15 +49,38 @@ and comparison/version switching.
 ## AI Readiness
 
 The project includes `ai` and `@ai-sdk/openai`. `POST /api/ai/study` streams a
-passage-grounded response using the selected Bible chapter as context.
+passage-grounded response using the selected Bible chapter as context. Web
+search is enabled by default through the OpenAI provider's hosted
+`openai.tools.webSearch()` tool so historical, linguistic, authorship,
+manuscript, background, and cross-reference claims can be verified with cited
+sources instead of relying only on model memory.
 
 Required environment:
 
 ```bash
 OPENAI_API_KEY=...
 # Optional
-OPENAI_MODEL=gpt-4.1-mini
+OPENAI_MODEL=gpt-5.5
 ```
+
+Example request:
+
+```bash
+curl -N http://localhost:3000/api/ai/study \
+  -H "Content-Type: application/json" \
+  -d '{
+    "versionId": "BSB",
+    "bookId": "JHN",
+    "chapter": 3,
+    "question": "What does being born again mean in context?",
+    "searchContextSize": "medium"
+  }'
+```
+
+Optional request fields:
+
+- `webSearch`: defaults to `true`; set `false` only for passage-only answers.
+- `searchContextSize`: `low`, `medium`, or `high`; defaults to `medium`.
 
 ## Bible Providers
 

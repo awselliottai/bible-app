@@ -39,3 +39,10 @@
   - **Files:** `app/page.tsx`, `app/components/BibleReaderView.tsx`, `app/lib/bible/reader.ts`, `app/lib/bible/helloao-provider.ts`, `app/read/[versionId]/page.tsx`, `app/read/[versionId]/[bookId]/[chapter]/page.tsx`, `app/search/page.tsx`, `app/globals.css`, `README.md`
   - **Verification:** `pnpm run lint`, `pnpm run typecheck`, and `pnpm run build` passed. Build required elevated permissions because Turbopack binds a local worker port in this environment.
   - **Follow-ups:** Consider adding a client-side version switcher that preserves the current book/chapter when the target translation includes that book.
+
+- `01:16` — **Web-search-backed Bible study route**
+  - **Summary:** Enabled OpenAI-hosted web search on the existing Vercel AI SDK Bible study backend route, defaulted the study model to `gpt-5.5`, added optional `webSearch` and `searchContextSize` request fields, strengthened the study prompt around citations and uncertainty, and extended the route duration for streaming responses.
+  - **Why:** Bible Q&A should remain grounded in the selected passage while using current external sources for historical, linguistic, manuscript, authorship, background, and cross-reference claims instead of relying only on model memory.
+  - **Files:** `app/lib/ai/bible-study.ts`, `app/api/ai/study/route.ts`, `README.md`, `public/updates/06-19-26/rolling-log.md`
+  - **Verification:** `pnpm run typecheck`, `pnpm run lint`, and `pnpm run build` passed. Build required elevated permissions because Turbopack binds a local worker port in this environment.
+  - **Follow-ups:** Add a frontend study/chat surface that streams from `/api/ai/study` and displays source links from the AI SDK stream protocol when user-facing AI study UI is implemented.

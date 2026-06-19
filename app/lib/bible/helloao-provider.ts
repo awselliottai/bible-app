@@ -285,7 +285,7 @@ export const helloAoBibleProvider: BibleProvider = {
       `/api/${encodeURIComponent(versionId)}/complete.json`,
       {
         next: {
-          revalidate: 60 * 60 * 24 * 7,
+          revalidate: 0,
         },
       },
     );

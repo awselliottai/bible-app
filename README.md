@@ -24,7 +24,8 @@ The app supports multiple server-side Bible providers behind the same contract:
 
 Public API routes resolve the requested version to the right provider. API.Bible
 IDs are normalized behind the provider layer so reader-friendly abbreviations can
-be used when they are returned by `GET /v1/bibles`.
+be used when they are returned by `GET /v1/bibles`. The public reader pages use
+the same provider layer and render normalized responses into the browsing UI.
 
 ## API Routes
 
@@ -34,10 +35,12 @@ be used when they are returned by `GET /v1/bibles`.
 - `GET /api/bible/search?version=BSB&q=love&limit=10`
 - `POST /api/ai/study`
 
-The intended reader route shape is:
+Reader routes:
 
 ```txt
+/read/[version]
 /read/[version]/[book]/[chapter]
+/search?version=BSB&q=love&limit=20
 ```
 
 Chapters are treated as the natural pagination unit for caching, stable links,

@@ -24,3 +24,31 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.bible-content-html p,
+.bible-content-html .p,
+.bible-content-html .q1,
+.bible-content-html .q2,
+.bible-content-html .m {
+  margin-block: 1rem;
+}
+
+.bible-content-html .v,
+.bible-content-html .verse-num,
+.bible-content-html sup {
+  color: #8a6a45;
+  font-size: 0.78rem;
+  font-weight: 700;
+  margin-right: 0.25rem;
+  vertical-align: super;
+}
+
+.bible-content-html .s1,
+.bible-content-html h3,
+.bible-content-html h4 {
+  color: #6f5336;
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-top: 1.5rem;
+  text-transform: uppercase;
+}

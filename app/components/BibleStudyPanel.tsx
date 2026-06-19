@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useRef, useState } from "react";
+import { FormEvent, ReactNode, useEffect, useRef, useState } from "react";
 
 type BibleStudyPanelProps = {
   versionId: string;
@@ -15,9 +15,81 @@ type StudyMessage = {
 };
 
 const maxSelectedTextLength = 2400;
+const markdownLinkPattern = /\[([^\]]+)]\((https?:\/\/[^)\s]+)\)/g;
 
 function cleanSelectedText(text: string) {
   return text.replace(/\s+/g, " ").trim().slice(0, maxSelectedTextLength);
+}
+
+function cleanCitationUrl(url: string) {
+  try {
+    const parsedUrl = new URL(url);
+    parsedUrl.searchParams.delete("utm_source");
+    return parsedUrl.toString();
+  } catch {
+    return url;
+  }
+}
+
+function renderInlineCitations(text: string) {
+  const nodes: ReactNode[] = [];
+  let lastIndex = 0;
+
+  for (const match of text.matchAll(markdownLinkPattern)) {
+    const [rawLink, label, url] = match;
+    const index = match.index ?? 0;
+
+    if (index > lastIndex) {
+      nodes.push(text.slice(lastIndex, index));
+    }
+
+    const cleanUrl = cleanCitationUrl(url);
+    nodes.push(
+      <a
+        className="font-semibold text-[#315f63] underline decoration-[#9bbabd] underline-offset-2 transition hover:text-[#21484b]"
+        href={cleanUrl}
+        key={`${cleanUrl}-${index}`}
+        rel="noreferrer"
+        target="_blank"
+      >
+        {label}
+      </a>,
+    );
+
+    lastIndex = index + rawLink.length;
+  }
+
+  if (lastIndex < text.length) {
+    nodes.push(text.slice(lastIndex));
+  }
+
+  return nodes.length > 0 ? nodes : text;
+}
+
+function renderResponseText(content: string) {
+  const lines = content.split("\n");
+
+  return lines.map((line, index) => {
+    const trimmedLine = line.trim();
+    const bulletText = trimmedLine.match(/^[-*]\s+(.+)$/)?.[1];
+
+    if (bulletText) {
+      return (
+        <div className="flex gap-2" key={`${line}-${index}`}>
+          <span aria-hidden="true" className="text-[#6f5336]">
+            •
+          </span>
+          <span>{renderInlineCitations(bulletText)}</span>
+        </div>
+      );
+    }
+
+    if (trimmedLine.length === 0) {
+      return <br key={`break-${index}`} />;
+    }
+
+    return <span key={`${line}-${index}`}>{renderInlineCitations(line)}</span>;
+  });
 }
 
 export function BibleStudyPanel({
@@ -229,7 +301,13 @@ export function BibleStudyPanel({
               <p className="mb-1 text-xs font-semibold uppercase tracking-[0.12em] text-[#6f5336]">
                 {message.role === "user" ? "Question" : "Response"}
               </p>
-              <p className="whitespace-pre-wrap">{message.content || "..."}</p>
+              <div className="space-y-2 whitespace-pre-wrap">
+                {message.content
+                  ? message.role === "assistant"
+                    ? renderResponseText(message.content)
+                    : message.content
+                  : "..."}
+              </div>
             </div>
           ))}
         </div>

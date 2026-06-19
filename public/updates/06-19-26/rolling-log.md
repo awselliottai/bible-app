@@ -61,3 +61,10 @@
   - **Files:** `app/components/BibleStudyPanel.tsx`, `public/updates/06-19-26/rolling-log.md`
   - **Verification:** `pnpm run typecheck` and `pnpm run lint` passed.
   - **Follow-ups:** None.
+
+- `01:33` — **Clickable study citations**
+  - **Summary:** Added lightweight response rendering for study answers so markdown-style web citations render as clickable links, bullet lines render as visual bullet rows, and OpenAI tracking query params are removed from citation URLs.
+  - **Why:** Web-search-backed study answers must show end-user citations clearly and clickably instead of exposing raw markdown citation syntax in the chat panel.
+  - **Files:** `app/components/BibleStudyPanel.tsx`, `public/updates/06-19-26/rolling-log.md`
+  - **Verification:** `pnpm run typecheck` and `pnpm run lint` passed.
+  - **Follow-ups:** Switch the study route to a UI message stream if the app needs first-class source annotation metadata from AI SDK streams.
